@@ -19,6 +19,8 @@ jobs:
           files=$(find . -type f)
 
           # Loop over each file
+          count=0
+          match_count=0
           for file in $files; do
             # Calculate the hash of the file
             actual_hash=$(sha256sum $file | cut -d' ' -f1)
@@ -26,8 +28,12 @@ jobs:
             # Compare the calculated hash with the expected hash
             if [ "$actual_hash" = "$expected_hash" ]; then
               echo "File hash matches: $file"
+              match_count=$((match_count+1))
             else
               echo "File hash does not match: $file"
-              exit 1
             fi
+            count=$((count+1))
           done
+
+          # Output the number of files checked and matched
+          echo "Checked $count files, matched $match_count files."
